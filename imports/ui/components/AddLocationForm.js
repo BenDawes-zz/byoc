@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Locations } from '../../api/locations';
 import { Meteor } from 'meteor/meteor';
+import { Map, MapMarker } from './Map';
 
 import Location from './Location.js';
 
- export default class AddLocationForm extends Component {
+
+export default class AddLocationForm extends Component {
 
   constructor(props) {
     super(props);
@@ -16,8 +18,8 @@ import Location from './Location.js';
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleMapClick = this.handleMapClick.bind(this);
   }
-
 
   handleSubmit(e) {
     e.preventDefault()
@@ -30,9 +32,12 @@ import Location from './Location.js';
     Meteor.call('locations.insert',name,location,accepts_own_containers);
   }
 
-
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
+  }
+
+  handleMapClick(event) {
+    this.setState({latitude: event.lat, longitude: event.lng});
   }
 
   render() {
@@ -47,26 +52,26 @@ import Location from './Location.js';
             onChange={this.handleChange}
           />
           <input
-            type="text"
-            name="latitude"
-            value={this.state.latitude}
-            placeholder="Latitude..."
-            onChange={this.handleChange}
-          />
-          <input
-            type="text"
-            name="longitude"
-            value={this.state.longitude}
-            placeholder="Longitude..."
-            onChange={this.handleChange}
-          />
-          <input
             type="checkbox"
             name="accepts_own_containers"
             value={this.state.accepts_own_containers}
             placeholder="Longitude..."
             onChange={this.handleChange}
           />
+          <div className="input-map map"
+              style={{width:"800px",height:"400px"}}>
+            <Map
+              center={this.props.center}
+              zoom={this.props.zoom}
+              onClick={this.handleMapClick}
+            >
+              {this.state.latitude !== "" && 
+              <MapMarker
+                lat={this.state.latitude}
+                lng={this.state.longitude}
+              />}
+            </Map>
+          </div>
           <input type="submit" value="Submit" />
         </form>
       </div>
