@@ -5,15 +5,16 @@ import AccountsUIWrapper from './AccountsUIWrapper';
 import { Map, MapMarker } from './Map';
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 
-import Location from './Location.js';
+import LocationListEntry from './LocationListEntry.js';
 import AddLocationForm from './AddLocationForm'
+import LocationView from './LocationView';
  
 // App component - represents the whole app
  class App extends Component {
 
   renderLocations() {
     return this.props.locations.map((location) => (
-      <Location key={location._id} location={location} />
+      <LocationListEntry key={location._id} location={location} />
     ));
   }
 
@@ -31,7 +32,7 @@ import AddLocationForm from './AddLocationForm'
           }
           <Link to={"/locations"}> Locations</Link>
           
-          <Route path="/new" 
+          <Route exact path="/new" 
             render={props =>
               this.props.currentUser ? (
                 <AddLocationForm zoom={7} center={[55.9533,-3.1883]}/>
@@ -60,6 +61,7 @@ import AddLocationForm from './AddLocationForm'
             </ul>
           }>
           </Route>
+          <Route exact path="/location/:_id" component={LocationView}/>
         </div>
       </Router>
     );

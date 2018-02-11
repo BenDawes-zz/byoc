@@ -3,9 +3,6 @@ import { Locations } from '../../api/locations';
 import { Meteor } from 'meteor/meteor';
 import { Map, MapMarker } from './Map';
 
-import Location from './Location.js';
-
-
 export default class AddLocationForm extends Component {
 
   constructor(props) {
@@ -57,7 +54,7 @@ export default class AddLocationForm extends Component {
             value={this.state.accepts_own_containers}
             placeholder="Longitude..."
             onChange={this.handleChange}
-          />
+          > Accepts Own Containers? </input>
           <div className="input-map map"
               style={{width:"800px",height:"400px"}}>
             <Map

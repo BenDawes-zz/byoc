@@ -58,5 +58,13 @@ Meteor.methods({
     Locations.update(_id, {
       $set: {name,location,accepts_own_containers}
     });
-  }
+  },
+  'locations.get'(_id) {
+
+    check(_id, String);
+
+    return Locations.find({
+      _id
+    })
+  },
 })
