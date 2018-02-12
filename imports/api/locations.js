@@ -11,14 +11,18 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'locations.insert'(name, location, accepts_own_containers) {
+  'locations.insert'(name, location, properties) {
 
     check(name, String);
     check(location, {
       latitude: Number,
       longitude: Number,
     });
-    check(accepts_own_containers, Boolean);
+    check(properties, Object);
+
+    for(let prop of Object.keys(properties)) {
+      check(properties[prop].text, String);
+    }
  
     // Make sure the user is logged in before inserting a task
     if (! this.userId) {
@@ -28,7 +32,7 @@ Meteor.methods({
     Locations.insert({
       name,
       location,
-      accepts_own_containers,
+      properties,
       owner: this.userId,
       username: Meteor.users.findOne(this.userId).username
     })
@@ -40,7 +44,7 @@ Meteor.methods({
     }
     Locations.remove({_id});
   },
-  'locations.update'(_id, name, location, accepts_own_containers) {
+  'locations.update'(_id, name, location, properties) {
 
     check(_id,String);
     check(name, String);
@@ -48,7 +52,12 @@ Meteor.methods({
       latitude: Number,
       longitude: Number,
     });
-    check(accepts_own_containers, Boolean);
+    check(properties, Object);
+
+    for(let prop of Object.keys(properties)) {
+      check(properties[prop].text, String);
+    }
+ 
  
     // Make sure the user is logged in before inserting a task
     if (! this.userId) {
@@ -56,7 +65,7 @@ Meteor.methods({
     }
 
     Locations.update(_id, {
-      $set: {name,location,accepts_own_containers}
+      $set: {name,location,properties}
     });
   },
   'locations.get'(_id) {

@@ -24,9 +24,16 @@ export default class AddLocationForm extends Component {
 
     accepts_own_containers = accepts_own_containers === "on";
 
+    let properties = {
+      accepts_own_containers: {
+        text: "Accepts Own Containers",
+        value: accepts_own_containers,
+      }
+    }
+
     let location = {latitude: parseFloat(latitude), longitude: parseFloat(longitude)};
 
-    Meteor.call('locations.insert',name,location,accepts_own_containers);
+    Meteor.call('locations.insert',name,location,properties);
   }
 
   handleChange(event) {
@@ -52,9 +59,8 @@ export default class AddLocationForm extends Component {
             type="checkbox"
             name="accepts_own_containers"
             value={this.state.accepts_own_containers}
-            placeholder="Longitude..."
             onChange={this.handleChange}
-          > Accepts Own Containers? </input>
+          /> Accepts Own Containers
           <div className="input-map map"
               style={{width:"800px",height:"400px"}}>
             <Map

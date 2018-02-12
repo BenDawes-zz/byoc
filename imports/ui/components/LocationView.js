@@ -15,17 +15,11 @@ class LocationView extends Component {
   render() {
     if(this.props.ready) {
       let location = this.props.location;
-      let { name, latitude, longitude, accepts_own_containers } = {
+      let { name, latitude, longitude, properties } = {
         name: location.name,
         latitude: location.location.latitude,
         longitude: location.location.longitude,
-        accepts_own_containers: location.accepts_own_containers,
-      }
-      let properties = {
-        accepts_own_containers: {
-          text: "Accepts Own Containers",
-          value: accepts_own_containers
-        }
+        properties: location.properties,
       }
       let propertiesList = []
       for(let k in properties) {

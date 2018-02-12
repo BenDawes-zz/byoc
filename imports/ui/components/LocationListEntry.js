@@ -18,7 +18,7 @@ export default class LocationListEntry extends Component {
 			name: this.props.location.name,
 			latitude: this.props.location.location.latitude,
       longitude: this.props.location.location.longitude,
-			accepts_own_containers: this.props.location.accepts_own_containers,
+			properties: this.props.location.properties,
 		}
 	}
 
@@ -43,9 +43,16 @@ export default class LocationListEntry extends Component {
 
     accepts_own_containers = accepts_own_containers === "on";
 
+    let properties = {
+      accepts_own_containers: {
+        text: "Accepts Own Containers",
+        value: accepts_own_containers,
+      }
+    }
+
     let location = {latitude: parseFloat(latitude), longitude: parseFloat(longitude)};
 
-    Meteor.call('locations.update',this.props.location._id,name,location,accepts_own_containers)
+    Meteor.call('locations.update',this.props.location._id,name,location,properties)
   }
 
   handleChange(event) {
@@ -59,7 +66,7 @@ export default class LocationListEntry extends Component {
   render() {
   	let readOnly =
   		<div className="location-data">
-  			<p>{this.state.name}, located at: {this.state.latitude}, {this.state.longitude}. Does {this.state.accepts_own_containers || "not "} accept own containers.</p>
+  			<p>{this.state.name}</p>
         <button className="delete location" onClick={(e) => this.deleteLocation(this.props.location._id)}>
           Delete
         </button>
