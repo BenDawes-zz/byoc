@@ -1,0 +1,11 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) minmax(min-content, max-content);
+  grid-auto-rows: minmax(40px,auto);
+  .links {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    grid-auto-rows: auto;
+  }
+}

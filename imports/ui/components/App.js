@@ -8,6 +8,7 @@ import LocationListEntry from './LocationListEntry.js';
 import AddLocationForm from './AddLocationForm'
 import LocationView from './LocationView';
 import AppHeader from './AppHeader';
+import HomePage from './HomePage';
  
 // App component - represents the whole app
  class App extends Component {
@@ -23,15 +24,7 @@ import AppHeader from './AppHeader';
       <Router>
         <div className="container">
           <AppHeader/>
-          <header>
-            <h1>Locations</h1>
-          </header>
-
-          { this.props.currentUser &&
-            <Link to={"/new"}>Add Location</Link>
-          }
-          <Link to={"/locations"}> Locations</Link>
-          
+          <Route exact path="/" component={HomePage}/>
           <Route exact path="/new" 
             render={props =>
               this.props.currentUser ? (
@@ -47,18 +40,22 @@ import AppHeader from './AppHeader';
             }
           />
           <Route exact path="/locations" render={props =>
-            <ul>
-              {this.renderLocations()}
-              <Map zoom={7} center={[55.9533,-3.1883]}>
-                {this.props.locations.map((location) => {
-                  return <MapMarker
-                    key={location._id}
-                    lat={location.location.latitude}
-                    lng={location.location.longitude}
-                    />
-                })}
-              </Map>
-            </ul>
+            <div className="locations">
+              {this.props.currentUser &&
+                <Link to={"/new"}>Add Location</Link>}
+              <ul>
+                {this.renderLocations()}
+                <Map zoom={7} center={[55.9533,-3.1883]}>
+                  {this.props.locations.map((location) => {
+                    return <MapMarker
+                      key={location._id}
+                      lat={location.location.latitude}
+                      lng={location.location.longitude}
+                      />
+                  })}
+                </Map>
+              </ul>
+            </div>
           }>
           </Route>
           <Route exact path="/location/:_id" component={LocationView}/>

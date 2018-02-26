@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AccountsUIWrapper from './AccountsUIWrapper';
 import { Link, withRouter } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
+import '../styles/AppHeader';
 
 // App header with link home and profile/other links
 class AppHeader extends Component {
@@ -13,17 +14,15 @@ class AppHeader extends Component {
   render() {
     return (
       <div className="header">
-        <Link to={"/"}>
-          <div className="logo">
+        <div className="logo">
+          <Link to={"/"}>
             <span>BYOC</span>
-          </div>
-        </Link>
+          </Link>
+        </div>
         <div className="links">
-          <ul>
-            <li><Link to={"/locations"}>Locations</Link></li>
-            {this.props.currentUser && <li><Link to={"/my-profile"}>Profile</Link></li>}
-            <AccountsUIWrapper/>
-          </ul>
+          <Link to={"/locations"}>Locations</Link>
+          {this.props.currentUser && <Link to={"/my-profile"}>Profile</Link>}
+          <AccountsUIWrapper/>
         </div>
       </div>
     )
