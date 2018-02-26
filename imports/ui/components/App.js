@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Locations } from '../../api/locations';
 import { withTracker } from 'meteor/react-meteor-data';
-import AccountsUIWrapper from './AccountsUIWrapper';
 import { Map, MapMarker } from './Map';
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 
 import LocationListEntry from './LocationListEntry.js';
 import AddLocationForm from './AddLocationForm'
 import LocationView from './LocationView';
+import AppHeader from './AppHeader';
  
 // App component - represents the whole app
  class App extends Component {
@@ -22,7 +22,7 @@ import LocationView from './LocationView';
     return (
       <Router>
         <div className="container">
-          <AccountsUIWrapper/>
+          <AppHeader/>
           <header>
             <h1>Locations</h1>
           </header>
