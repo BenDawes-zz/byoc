@@ -58,7 +58,7 @@ import HomePage from './HomePage';
             </div>
           }>
           </Route>
-          <Route exact path="/location/:_id" component={LocationView}/>
+        <Route exact path="/location/:_id" render={({match}) => <LocationView id={match.params._id}/>}/>
         </div>
       </Router>
     );

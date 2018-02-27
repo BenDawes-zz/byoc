@@ -3,7 +3,6 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
  
 export const Locations = new Mongo.Collection('locations');
-
 if (Meteor.isServer) {
   Meteor.publish('locations', function locationsPublication() {
     return Locations.find();
@@ -67,13 +66,5 @@ Meteor.methods({
     Locations.update(_id, {
       $set: {name,location,properties}
     });
-  },
-  'locations.get'(_id) {
-
-    check(_id, String);
-
-    return Locations.find({
-      _id
-    })
-  },
+  }
 })

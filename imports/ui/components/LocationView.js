@@ -4,6 +4,7 @@ import { Locations } from '../../api/locations';
 import { Map, MapMarker } from './Map';
 import { withRouter } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
+import { PropTypes } from 'prop-types';
 
 // Location profile component - represents a single location
 class LocationView extends Component {
@@ -48,10 +49,15 @@ class LocationView extends Component {
   }
 }
 
-export default withRouter(withTracker((props) => {
+export default withTracker((props) => {
   let sub = Meteor.subscribe('locations');
+  if(props.id === undefined || props.id === null) {
+    return {
+      ready: false,
+    }
+  }
   return {
     ready: sub.ready(),
-    location: Locations.find({_id: props.match.params._id}).fetch()[0]
+    location: Locations.find({_id: props.id}).fetch()[0]
   }
-})(LocationView));
+})(LocationView);
