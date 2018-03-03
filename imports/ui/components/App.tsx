@@ -56,6 +56,7 @@ export interface IAppProps {
                       key={location._id}
                       lat={location.location.lat}
                       lng={location.location.lng}
+                      popupDetails={<div>{location.name}</div>}
                       />
                   })}
                 </Map>

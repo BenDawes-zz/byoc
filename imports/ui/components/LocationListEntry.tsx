@@ -53,12 +53,12 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
 
     const { name, latitude, longitude, properties } = this.state;
 
-    const accepts_own_containers = properties.accepts_own_containers.value;
 
-    const formattedProperties: ILocationProperties = {
-      accepts_own_containers: {
-        value: accepts_own_containers,
-      }
+    const formattedProperties: ILocationProperties = {}
+
+    const accepts_own_containers = properties.accepts_own_containers && properties.accepts_own_containers.value;
+    if(accepts_own_containers !== undefined) {
+      formattedProperties.accepts_own_containers = {value: accepts_own_containers};
     }
 
     const location = {lat: latitude, lng: longitude};
@@ -74,7 +74,7 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
         const newState = Object.assign({},oldState);
         switch(event.target.name) {
           case 'accepts_own_containers':
-            newState.properties.accepts_own_containers.value = event.target.value === 'on'
+            newState.properties.accepts_own_containers = {value: event.target.value === 'on'};
         }
         return newState
       });
@@ -86,7 +86,6 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
   }
 
   public render() {
-    const accepts_own_containers = this.state.properties.accepts_own_containers.value;
   	const readOnly =
   		<div className="location-data">
   			<p>{this.state.name}</p>
@@ -126,7 +125,7 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
         <input
           type="checkbox"
           name="accepts_own_containers"
-          value={accepts_own_containers ? "on" : "off"}
+          value={(this.state.properties.accepts_own_containers && this.state.properties.accepts_own_containers.value) ? "on" : "off"}
           onChange={this.handleChange}
         />
         <button className={(this.state.mode === "default" ? "edit" : "save") + " location"} onClick={this.toggleState}>

@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Locations } from  '../imports/api/locations.js';
+import { Locations, ILocationBase, QuantityGradient } from  '../imports/api/locations.js';
 import { InitDB } from '../imports/api/initdb'
 
 Meteor.startup(() => {
@@ -14,40 +14,40 @@ Meteor.startup(() => {
 
 	InitDB.insert({id: "db_initialised"});
 
-	Locations.insert({
-		name: "Happy fun shop!",
-		properties: {
-			accepts_own_containers: {
-				value: true,
-			}
-		},
-		location: {lat: 2.23524, lng: 31.234542},
-		createdAt: new Date(),
-		owner: "Admin",
-		username: "Admin",
-	});
-	Locations.insert({
-		name: "Sad fun shop!",
-		properties: {
-			accepts_own_containers: {
-				value: false 
-			}
-		},
-		location: {lat: 2.246537, lng: 31.6543245},
-		createdAt: new Date(),
-		owner: "Admin",
-		username: "Admin",
-	});
-	Locations.insert({
-		name: "Happy boring shop!",
-		properties: {
-			accepts_own_containers: {
-				value: true
-			}
-		},
-		location: {lat: 2.12413, lng: 31.232566},
-		createdAt: new Date(),
-		owner: "Admin",
-		username: "Admin",
-	});
+	const dummyData: ILocationBase[] = [
+		{
+			name: "Artisan Roast",
+			properties: {
+				accepts_own_containers: {
+					value: true,
+				}
+			},
+			location: {lat:55.957929,lng: -3.188862},
+			createdAt: new Date(),
+			owner: "Admin",
+			username: "Admin",
+		},{
+			name: "Tattie Shaws",
+			properties: {
+				accepts_own_containers: {
+					value: false 
+				},
+				own_packaging_recyclable: {
+					value: QuantityGradient.Some,
+				},
+				own_packaging_compostable: {
+					value: QuantityGradient.Some,
+				},
+				unpackaged_items: {
+					value: QuantityGradient.Most,
+				}
+			},
+			location: {lat: 55.959660, lng: -3.182572},
+			createdAt: new Date(),
+			owner: "Admin",
+			username: "Admin",
+		}
+	]
+
+	dummyData.forEach((d) => Locations.insert(d));
 });

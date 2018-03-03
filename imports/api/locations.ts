@@ -5,15 +5,26 @@ import { Coords } from 'google-map-react';
 
 export type IPoint = Coords;
 
+export enum QuantityGradient {
+  None = 1,
+  Some,
+  Most,
+  All
+}
+
 export interface ILocationProperty<T> {
   value: T;
 }
 
 export interface ILocationProperties {
-  accepts_own_containers: ILocationProperty<Boolean>;
+  accepts_own_containers?: ILocationProperty<Boolean>;
+  own_packaging_recyclable?: ILocationProperty<QuantityGradient>;
+  own_packaging_compostable?: ILocationProperty<QuantityGradient>;
+  unpackaged_items?: ILocationProperty<QuantityGradient>;
+  return_own_packaging?: ILocationProperty<QuantityGradient>;
 }
 
-export interface ILocation extends ILocationBase{
+export interface ILocation extends ILocationBase {
   _id: string,
 }
 

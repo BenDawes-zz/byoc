@@ -1,0 +1,30 @@
+.map-marker-container {
+  position: absolute;
+  width: auto;
+  height: auto;
+  .icon-container {
+    position:absolute;
+    bottom: 0;
+    .map-pin {
+      cursor: pointer;
+      position: relative;
+      left: -50%;
+    }
+  }
+  .map-marker-details-container {
+    position: absolute;
+    width: auto;
+    height: auto;
+    bottom:0;
+    margin-top: 50%;
+    .map-marker-details {
+      position: relative;
+      left: 15px;
+      border-radius: 5px;
+      background-color: rgb(255,255,255);
+      > * {
+        padding: 4px;
+      }
+    }
+  }
+}

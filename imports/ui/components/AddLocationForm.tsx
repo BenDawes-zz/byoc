@@ -83,8 +83,8 @@ export default class AddLocationForm extends React.Component<IAddLocationFormPro
             >
               {this.state.latitude !== undefined && 
               <MapMarker
-                lat={this.state.latitude}
-                lng={this.state.longitude}
+                lat={this.state.latitude || 0}
+                lng={this.state.longitude || 0}
               />}
             </Map>
           </div>
