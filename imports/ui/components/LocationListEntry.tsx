@@ -1,10 +1,22 @@
-import React, { Component } from 'react';
+import * as React from 'react';
  
-import { Locations } from '../../api/locations';
+import { Locations, ILocation, ILocationProperties, updateLocation } from '../../api/locations';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 
+export interface ILocationListEntryProps {
+  location: ILocation;
+}
+
+export interface ILocationListEntryState {
+  mode: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  properties: ILocationProperties;
+}
+
 // Location component - represents a single location
-export default class LocationListEntry extends Component {
+export default class LocationListEntry extends React.Component<ILocationListEntryProps,ILocationListEntryState> {
 
 	constructor(props) {
 		super(props);
@@ -16,13 +28,13 @@ export default class LocationListEntry extends Component {
 		this.state = {
 			mode: "default",
 			name: this.props.location.name,
-			latitude: this.props.location.location.latitude,
-      longitude: this.props.location.location.longitude,
+			latitude: this.props.location.location.lat,
+      longitude: this.props.location.location.lng,
 			properties: this.props.location.properties,
 		}
 	}
 
-  toggleState(e) {
+  private toggleState(e) {
   	e.preventDefault();
   	let { mode } = this.state;
   	if(mode === "edit") {
@@ -36,35 +48,46 @@ export default class LocationListEntry extends Component {
   }
 
 
-  handleSubmit(e) {
+  private handleSubmit(e) {
     e.preventDefault();
 
-    let { name, latitude, longitude, accepts_own_containers } = this.state;
+    const { name, latitude, longitude, properties } = this.state;
 
-    accepts_own_containers = accepts_own_containers === "on";
+    const accepts_own_containers = properties.accepts_own_containers.value;
 
-    let properties = {
+    const formattedProperties: ILocationProperties = {
       accepts_own_containers: {
-        text: "Accepts Own Containers",
         value: accepts_own_containers,
       }
     }
 
-    let location = {latitude: parseFloat(latitude), longitude: parseFloat(longitude)};
+    const location = {lat: latitude, lng: longitude};
 
-    Meteor.call('locations.update',this.props.location._id,name,location,properties)
+    updateLocation(this.props.location._id,name,location,formattedProperties)
   }
 
-  handleChange(event) {
-    this.setState({[event.target.name]: event.target.value});
+  private handleChange(event) {
+    if(event.target.name in Object.keys(this.state)) {
+      this.setState({[event.target.name]: event.target.value});
+    } else {
+      this.setState((oldState,curProps) => {
+        const newState = Object.assign({},oldState);
+        switch(event.target.name) {
+          case 'accepts_own_containers':
+            newState.properties.accepts_own_containers.value = event.target.value === 'on'
+        }
+        return newState
+      });
+    }
   }
 
-  deleteLocation(_id) {
+  private deleteLocation(_id) {
     Meteor.call('locations.delete',_id);
   }
 
-  render() {
-  	let readOnly =
+  public render() {
+    const accepts_own_containers = this.state.properties.accepts_own_containers.value;
+  	const readOnly =
   		<div className="location-data">
   			<p>{this.state.name}</p>
         <button className="delete location" onClick={(e) => this.deleteLocation(this.props.location._id)}>
@@ -77,7 +100,7 @@ export default class LocationListEntry extends Component {
           View
         </Link>
       </div>
-  	let editMode = (
+  	const editMode = (
       <form className="edit-location">
         <input
           type="text"
@@ -103,8 +126,7 @@ export default class LocationListEntry extends Component {
         <input
           type="checkbox"
           name="accepts_own_containers"
-          value={this.state.accepts_own_containers}
-          placeholder="Longitude..."
+          value={accepts_own_containers ? "on" : "off"}
           onChange={this.handleChange}
         />
         <button className={(this.state.mode === "default" ? "edit" : "save") + " location"} onClick={this.toggleState}>
