@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import AccountsUIWrapper from './AccountsUIWrapper';
 import { Link, withRouter } from 'react-router-dom';
-import { withTracker } from 'meteor/react-meteor-data';
+import { withTracker } from '../../js-imports/react-meteor-data';
 import '../styles/AppHeader';
 
+export interface IAppHeaderProps {
+  currentUser: Meteor.User;
+}
+
 // App header with link home and profile/other links
-class AppHeader extends Component {
+class AppHeader extends React.Component<IAppHeaderProps,{}> {
 
 	constructor(props) {
     super(props);

@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
+import * as React from 'react';
  
-import { Locations } from '../../api/locations';
+import { Locations, ILocation } from '../../api/locations';
 import { Map, MapMarker } from './Map';
 import { withRouter } from 'react-router-dom';
-import { withTracker } from 'meteor/react-meteor-data';
+import { withTracker } from '../../js-imports/react-meteor-data';
 import { PropTypes } from 'prop-types';
+import { TAPi18n } from '../../js-imports/tap:i18n';
+
+const translations = (s) => TAPi18n.__(`LocationView.${s}`);
+
+export interface ILocationViewProps {
+  ready: boolean;
+  location: ILocation;
+}
 
 // Location profile component - represents a single location
-class LocationView extends Component {
+class LocationView extends React.Component<ILocationViewProps,{}> {
 
 	constructor(props) {
     super(props);
@@ -15,19 +23,19 @@ class LocationView extends Component {
 
   render() {
     if(this.props.ready) {
-      let location = this.props.location;
-      let { name, latitude, longitude, properties } = {
+      const location = this.props.location;
+      const { name, latitude, longitude, properties } = {
         name: location.name,
-        latitude: location.location.latitude,
-        longitude: location.location.longitude,
+        latitude: location.location.lat,
+        longitude: location.location.lng,
         properties: location.properties,
       }
-      let propertiesList = []
+      const propertiesList: React.ReactElement<{}>[] = []
       for(let k in properties) {
         if(properties[k].value) {
           propertiesList.push(
             <li key={k} className="property">
-              {properties[k].text}
+              {translations(k)}
             </li>
           )
         }

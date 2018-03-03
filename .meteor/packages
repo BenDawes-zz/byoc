@@ -19,7 +19,8 @@ shell-server@0.3.1            # Server-side component of the `meteor shell` comm
 
 accounts-ui
 accounts-password
-react-meteor-data
 fourseven:scss
 tap:i18n
 meteorhacks:aggregate
+barbatus:typescript
+react-meteor-data
