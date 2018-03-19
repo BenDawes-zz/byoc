@@ -6,10 +6,10 @@ import { Coords } from 'google-map-react';
 export type IPoint = Coords;
 
 export enum QuantityGradient {
-  None = 1,
-  Some,
-  Most,
-  All
+  None = "NONE",
+  Some = "SOME",
+  Most = "MOST",
+  All = "ALL"
 }
 
 export interface ILocationProperty<T> {

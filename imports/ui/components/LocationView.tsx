@@ -35,7 +35,7 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
         if(properties[k].value) {
           propertiesList.push(
             <li key={k} className="property">
-              {translations(k)}
+              <span className="key">{translations(k)}</span><span className="value">{properties[k].value !== true && translations(properties[k].value)}</span>
             </li>
           )
         }

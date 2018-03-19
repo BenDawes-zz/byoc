@@ -1,5 +1,12 @@
 {
   "LocationView": {
-    "accepts_own_containers": "Accepts Own Containers"
+    "accepts_own_containers": "Accepts Own Containers?",
+    "own_packaging_recyclable": "Own Packaging Recyclable?",
+    "own_packaging_compostable": "Own Packaging Compostable?",
+    "unpackaged_items": "Sells Unpackaged Items?",
+    "NONE": "None",
+    "SOME": "Some",
+    "MOST": "Most",
+    "ALL": "All"
   }
 }
