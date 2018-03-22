@@ -6,12 +6,12 @@ import { ILocationBase, QuantityGradient } from 'imports/api/model.js';
 Meteor.startup(() => {
 
 	// Dummy data
-	InitDB.remove({})
 	let db_status = InitDB.find({id: "db_initialised"}).fetch();
 	if(db_status.length > 0) {
 		return;
 	}
 	Locations.remove({})
+	InitDB.remove({})
 
 	InitDB.insert({id: "db_initialised"});
 
