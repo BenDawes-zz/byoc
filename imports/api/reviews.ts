@@ -75,3 +75,5 @@ export function updateReview(_id: string, review: IReviewBase) {
 export function insertReview(review: IReviewBase, reviewOf: string, reviewOfType: EReviewableTypes) {
   Meteor.call('reviews.insert', review, reviewOf, reviewOfType);
 }
+
+export const addReviewTo = insertReview;

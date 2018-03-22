@@ -74,3 +74,5 @@ export function updateComment(_id: string, comment: ICommentBase) {
 export function insertComment(comment: ICommentBase, commentOn: string, commentOnType: ECommentableTypes) {
   Meteor.call('comments.insert', comment, commentOn, commentOnType);
 }
+
+export const addCommentTo = insertComment;
