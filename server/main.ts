@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { Locations, ILocationBase, QuantityGradient } from  '../imports/api/locations.js';
+import { Locations, insertLocation } from  '../imports/api/locations.js';
 import { InitDB } from '../imports/api/initdb'
+import { ILocationBase, QuantityGradient } from 'imports/api/model.js';
 
 Meteor.startup(() => {
 
@@ -23,9 +24,6 @@ Meteor.startup(() => {
 				}
 			},
 			location: {lat:55.957929,lng: -3.188862},
-			createdAt: new Date(),
-			owner: "Admin",
-			username: "Admin",
 		},{
 			name: "Tattie Shaws",
 			properties: {
@@ -43,11 +41,8 @@ Meteor.startup(() => {
 				}
 			},
 			location: {lat: 55.959660, lng: -3.182572},
-			createdAt: new Date(),
-			owner: "Admin",
-			username: "Admin",
 		}
 	]
 
-	dummyData.forEach((d) => Locations.insert(d));
+	dummyData.forEach((d) => insertLocation(d));
 });

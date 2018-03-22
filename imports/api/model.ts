@@ -78,8 +78,8 @@ export interface ICommentMeteor extends IComment, IMeteorEntity {
 }
 
 export interface IRateable {
-  upvotes: number;
-  downvotes: number;
+  upvotes?: number;
+  downvotes?: number;
 }
 
 export type ReviewID = string;

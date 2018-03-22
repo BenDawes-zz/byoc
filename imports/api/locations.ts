@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Coords } from 'google-map-react';
-import { ILocation, IPoint, ILocationProperties, IMeteorEntity } from './model';
+import { ILocation, IPoint, ILocationProperties, IMeteorEntity, ILocationBase } from './model';
 import { getNewUserCreatedObject } from './usercreated';
 import { getNewEditableObject } from './editable';
 
@@ -15,7 +15,9 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'locations.insert'(name: string, location: IPoint, properties: ILocationProperties) {
+  'locations.insert'(locationBase: ILocationBase) {
+
+    const { name, location, properties } = locationBase;
 
     check(name, String);
     check(location, {
@@ -77,10 +79,10 @@ Meteor.methods({
   }
 })
 
-export function updateLocation(_id: string, name: string, location: IPoint, properties: ILocationProperties) {
-  Meteor.call('locations.update',_id, name, location, properties);
+export function updateLocation(_id: string, newLocation: ILocationBase) {
+  Meteor.call('locations.update',_id, newLocation);
 }
 
-export function insertLocation(name: string, location: IPoint, properties: ILocationProperties) {
-  Meteor.call('locations.insert', name, location, properties);
+export function insertLocation(location: ILocationBase) {
+  Meteor.call('locations.insert', location);
 }
