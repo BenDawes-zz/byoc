@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Locations, IPoint, ILocationProperties, insertLocation } from '../../api/locations';
+import { Locations, insertLocation } from '../../api/locations';
 import { Meteor } from 'meteor/meteor';
 import { Map, MapMarker } from './Map';
 import { ClickEventValue } from 'google-map-react';
+import { IPoint, ILocationProperties } from '../../api/model';
 
 export interface IAddLocationFormProps {
   center: IPoint,

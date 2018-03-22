@@ -8,5 +8,5 @@ declare module 'meteor/react-meteor-data' {
     reactComponent: ComponentConstructor<OutP>)
     : ComponentConstructor<InP>;
   
-  export function withTracker(opt: (props: InP) => D | {getMeteorData: (props: InP) => D, pure?: boolean}): ((ComponentConstructor<InP>) => ComponentConstructor<InP>);
+  export function withTracker<InP, D>(opt: (props: InP) => D | {getMeteorData: (props: InP) => D, pure?: boolean}): ((cons: ComponentConstructor<InP>) => ComponentConstructor<InP>);
 }

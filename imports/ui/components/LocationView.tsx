@@ -1,6 +1,6 @@
 import * as React from 'react';
  
-import { ILocation } from '../../api/model';
+import { ILocation, ILocationMeteor } from '../../api/model';
 import { Locations } from '../../api/locations';
 import { Map, MapMarker } from './Map';
 import { withRouter } from 'react-router-dom';
@@ -10,10 +10,17 @@ import { TAPi18n } from '../../js-imports/tap:i18n';
 
 const translations = (s) => TAPi18n.__(`LocationView.${s}`);
 
-export interface ILocationViewProps {
+export interface ILocationViewMeteorProps {
   ready: boolean;
-  location: ILocation;
+  location?: ILocationMeteor;
 }
+
+export interface ILocationViewExternalProps {
+  id: string;
+}
+
+export type ILocationViewProps = ILocationViewMeteorProps & ILocationViewExternalProps;
+
 
 // Location profile component - represents a single location
 class LocationView extends React.Component<ILocationViewProps,{}> {
@@ -23,7 +30,7 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
 	}
 
   render() {
-    if(this.props.ready) {
+    if(this.props.ready && this.props.location) {
       const location = this.props.location;
       const { name, latitude, longitude, properties } = {
         name: location.name,
@@ -58,15 +65,17 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
   }
 }
 
-export default withTracker((props) => {
+export default withTracker<ILocationViewExternalProps,ILocationViewProps>((props) => {
   let sub = Meteor.subscribe('locations');
   if(props.id === undefined || props.id === null) {
     return {
+      ...props,
       ready: false,
     }
   }
   return {
+    ...props,
     ready: sub.ready(),
-    location: Locations.find({_id: props.id}).fetch()[0]
+    location: Locations.find({_id: props.id}).fetch()[0] as ILocationMeteor,
   }
 })(LocationView);

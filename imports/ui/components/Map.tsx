@@ -1,8 +1,8 @@
 import GoogleMap, { ClickEventValue, ChildComponentProps } from 'google-map-react';
 import * as React from 'react';
-import { IPoint } from '../../api/locations';
 import * as feather from 'feather-icons';
 import '../styles/Map';
+import { IPoint } from '../../api/model';
 
 export interface IMapProps {
     center: IPoint,

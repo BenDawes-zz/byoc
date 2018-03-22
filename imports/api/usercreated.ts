@@ -1,10 +1,10 @@
 import { IUserCreated } from "./model";
 import { Meteor } from 'meteor/meteor';
 
-export function getNewUserCreatedObject(userId: string): IUserCreated {
+export function getNewUserCreatedObject(userId: string | undefined): IUserCreated {
   return {
-    owner: userId,
-    username: Meteor.users.findOne(userId).username,
+    owner: userId || "unknown_user_id",
+    username: userId ? Meteor.users.findOne(userId).username : undefined,
     createdAt: new Date(),
   }
 }

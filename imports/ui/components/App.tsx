@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Locations, ILocation } from '../../api/locations';
+import { Locations } from '../../api/locations';
 import { withTracker } from '../../js-imports/react-meteor-data';
 import { Map, MapMarker } from './Map';
 import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
@@ -9,12 +9,18 @@ import AddLocationForm from './AddLocationForm'
 import LocationView from './LocationView';
 import AppHeader from './AppHeader';
 import HomePage from './HomePage';
+import { ILocationMeteor } from '../../api/model';
 
-export interface IAppProps {
-  locations: ILocation[],
+export interface IAppMeteorProps {
+  locations: ILocationMeteor[],
   currentUser: Meteor.User,
 }
  
+export interface IAppExternalProps {
+}
+
+export type IAppProps = IAppMeteorProps & IAppExternalProps;
+
 // App component - represents the whole app
  class App extends React.Component<IAppProps,{}> {
 
@@ -72,10 +78,11 @@ export interface IAppProps {
   
 }
 
-export default withTracker(() => {
+export default withTracker<IAppExternalProps, IAppProps>((props) => {
   Meteor.subscribe('locations');
   return {
-    locations: Locations.find({}).fetch(),
+    ...props,
+    locations: Locations.find({}).fetch() as ILocationMeteor[],
     currentUser: Meteor.user(),
   };
 })(App);

@@ -1,10 +1,10 @@
 import { IEditable } from "./model";
 import { Meteor } from 'meteor/meteor';
 
-export function getNewEditableObject<T>(userId: string): IEditable<T> {
+export function getNewEditableObject<T>(userId: string | undefined): IEditable<T> {
   return {
-    lastEditedBy: userId,
-    lastEditedByUsername: Meteor.users.findOne(userId).username,
+    lastEditedBy: userId || "unknown_user_id",
+    lastEditedByUsername: userId ? Meteor.users.findOne(userId).username: undefined,
     lastEditedAt: new Date(),
     edits: [],
   }
