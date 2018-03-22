@@ -64,7 +64,7 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
 
     const location = {lat: latitude, lng: longitude};
 
-    updateLocation(this.props.location._id,name,location,formattedProperties)
+    updateLocation(this.props.location._id,{name,location,properties:formattedProperties})
   }
 
   private handleChange(event) {

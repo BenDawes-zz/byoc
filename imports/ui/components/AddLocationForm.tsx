@@ -46,7 +46,7 @@ export default class AddLocationForm extends React.Component<IAddLocationFormPro
 
     let location = {lat: latitude || 0, lng: longitude || 0};
 
-    insertLocation(name,location,properties);
+    insertLocation({name,location,properties});
   }
 
   handleChange(event) {
