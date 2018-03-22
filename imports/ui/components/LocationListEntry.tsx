@@ -1,10 +1,11 @@
 import * as React from 'react';
  
-import { Locations, ILocation, ILocationProperties, updateLocation } from '../../api/locations';
+import { Locations, updateLocation } from '../../api/locations';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { ILocationProperties, ILocationMeteor } from '../../api/model';
 
 export interface ILocationListEntryProps {
-  location: ILocation;
+  location: ILocationMeteor;
 }
 
 export interface ILocationListEntryState {
@@ -58,7 +59,7 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
 
     const accepts_own_containers = properties.accepts_own_containers && properties.accepts_own_containers.value;
     if(accepts_own_containers !== undefined) {
-      formattedProperties.accepts_own_containers = {value: accepts_own_containers};
+      formattedProperties.accepts_own_containers = { value: accepts_own_containers, upvotes: 0, downvotes: 0 };
     }
 
     const location = {lat: latitude, lng: longitude};
@@ -74,7 +75,10 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
         const newState = Object.assign({},oldState);
         switch(event.target.name) {
           case 'accepts_own_containers':
-            newState.properties.accepts_own_containers = {value: event.target.value === 'on'};
+            const oldVotes = oldState.properties.accepts_own_containers;
+            const oldUpvotes = oldVotes ? oldVotes.upvotes : 0;
+            const oldDownvotes = oldVotes ? oldVotes.downvotes : 0;
+            newState.properties.accepts_own_containers = {value: event.target.value === 'on', upvotes: oldUpvotes, downvotes: oldDownvotes };
         }
         return newState
       });
