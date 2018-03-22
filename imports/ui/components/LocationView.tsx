@@ -1,6 +1,7 @@
 import * as React from 'react';
  
-import { Locations, ILocation } from '../../api/locations';
+import { ILocation } from '../../api/model';
+import { Locations } from '../../api/locations';
 import { Map, MapMarker } from './Map';
 import { withRouter } from 'react-router-dom';
 import { withTracker } from '../../js-imports/react-meteor-data';

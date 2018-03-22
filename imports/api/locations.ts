@@ -2,42 +2,11 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Coords } from 'google-map-react';
+import { ILocation, IPoint, ILocationProperties, IMeteorEntity } from './model';
+import { getNewUserCreatedObject } from './usercreated';
+import { getNewEditableObject } from './editable';
 
-export type IPoint = Coords;
-
-export enum QuantityGradient {
-  None = "NONE",
-  Some = "SOME",
-  Most = "MOST",
-  All = "ALL"
-}
-
-export interface ILocationProperty<T> {
-  value: T;
-}
-
-export interface ILocationProperties {
-  accepts_own_containers?: ILocationProperty<Boolean>;
-  own_packaging_recyclable?: ILocationProperty<QuantityGradient>;
-  own_packaging_compostable?: ILocationProperty<QuantityGradient>;
-  unpackaged_items?: ILocationProperty<QuantityGradient>;
-  return_own_packaging?: ILocationProperty<QuantityGradient>;
-}
-
-export interface ILocation extends ILocationBase {
-  _id: string,
-}
-
-export interface ILocationBase {
-  name: string,
-  location: IPoint,
-  properties: ILocationProperties,
-  owner: string,
-  username: string | undefined,
-  createdAt: Date;
-}
-
-export const Locations = new Mongo.Collection<ILocationBase>('locations');
+export const Locations = new Mongo.Collection<ILocation>('locations');
 
 if (Meteor.isServer) {
   Meteor.publish('locations', function locationsPublication() {
@@ -60,13 +29,21 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    const { owner, username, createdAt } = getNewUserCreatedObject(this.userId);
+    const { lastEditedAt, lastEditedBy, lastEditedByUsername, edits } = getNewEditableObject<ILocation>(this.userId);
+
     Locations.insert({
       name,
       location,
       properties,
-      owner: this.userId,
-      username: Meteor.users.findOne(this.userId).username,
-      createdAt: new Date(),
+      owner,
+      username,
+      createdAt,
+      reviews: [],
+      lastEditedAt,
+      lastEditedBy,
+      lastEditedByUsername,
+      edits,
     })
   },
   'locations.delete'(_id) {
@@ -90,8 +67,12 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    const { lastEditedAt, lastEditedBy, lastEditedByUsername } = getNewEditableObject<ILocation>(this.userId);
+    const existingLocation = Locations.findOne(_id);
+    const edits = [existingLocation,...existingLocation.edits];
+
     Locations.update(_id, {
-      $set: {name,location,properties}
+      $set: {name,location,properties,lastEditedAt,lastEditedBy,lastEditedByUsername,edits}
     });
   }
 })

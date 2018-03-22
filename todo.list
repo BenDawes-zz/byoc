@@ -4,3 +4,4 @@ Enter some real data
 Let you search for an address and show the area around
 Let you comment on locations
 Let you vote yes or no on each property, and comment why
+Remove _id from objects in api imports
