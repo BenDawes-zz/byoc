@@ -17,9 +17,10 @@ if (Meteor.isServer) {
 Meteor.methods({
   'locations.insert'(locationBase: ILocationBase) {
 
-    const { name, location, properties } = locationBase;
+    const { name, location, properties, description } = locationBase;
 
     check(name, String);
+    check(description, String);
     check(location, {
       lat: Number,
       lng: Number,
@@ -72,7 +73,7 @@ export function insertLocation(location: ILocationBase) {
 }
 
 export function unsafeInsertLocation(locationBase: ILocationBase) {
-  const { name, location, properties } = locationBase;
+  const { name, location, properties, description } = locationBase;
   const { owner, username, createdAt } = getNewUserCreatedObject(this.userId);
   const { lastEditedAt, lastEditedBy, lastEditedByUsername, edits } = getNewEditableObject<ILocation>(this.userId);
 
@@ -80,6 +81,7 @@ export function unsafeInsertLocation(locationBase: ILocationBase) {
     name,
     location,
     properties,
+    description,
     owner,
     username,
     createdAt,

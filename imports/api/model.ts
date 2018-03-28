@@ -1,5 +1,9 @@
 import { Coords } from "google-map-react";
 
+export interface InputEventTarget {
+  value: string;
+}
+
 export type IPoint = Coords;
 
 export interface IMeteorEntity {
@@ -51,6 +55,7 @@ export interface ILocationBase {
   name: string;
   location: IPoint;
   properties: ILocationProperties;
+  description: string;
 }
 
 export type CommentID = string;

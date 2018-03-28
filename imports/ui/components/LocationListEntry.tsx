@@ -2,7 +2,7 @@ import * as React from 'react';
  
 import { Locations, updateLocation } from '../../api/locations';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
-import { ILocationProperties, ILocationMeteor } from '../../api/model';
+import { ILocationProperties, ILocationMeteor, ILocationBase, InputEventTarget } from '../../api/model';
 
 export interface ILocationListEntryProps {
   location: ILocationMeteor;
@@ -10,10 +10,7 @@ export interface ILocationListEntryProps {
 
 export interface ILocationListEntryState {
   mode: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  properties: ILocationProperties;
+  location: ILocationBase;
 }
 
 // Location component - represents a single location
@@ -28,11 +25,8 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
     this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {
 			mode: "default",
-			name: this.props.location.name,
-			latitude: this.props.location.location.lat,
-      longitude: this.props.location.location.lng,
-			properties: this.props.location.properties,
-		}
+      location: Object.assign({},this.props.location) as ILocationBase,
+    }
 	}
 
   private toggleState(e) {
@@ -49,39 +43,40 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
   }
 
 
-  private handleSubmit(e) {
-    e.preventDefault();
-
-    const { name, latitude, longitude, properties } = this.state;
-
-
-    const formattedProperties: ILocationProperties = {}
-
-    const accepts_own_containers = properties.accepts_own_containers && properties.accepts_own_containers.value;
-    if(accepts_own_containers !== undefined) {
-      formattedProperties.accepts_own_containers = { value: accepts_own_containers, upvotes: 0, downvotes: 0 };
-    }
-
-    const location = {lat: latitude, lng: longitude};
-
-    updateLocation(this.props.location._id,{name,location,properties:formattedProperties})
+  private handleSubmit(event: React.FormEvent<HTMLElement>) {
+    event.preventDefault();
+    updateLocation(this.props.location._id, this.state.location)
   }
 
-  private handleChange(event) {
-    if(event.target.name in Object.keys(this.state)) {
-      this.setState({[event.target.name]: event.target.value});
-    } else {
-      this.setState((oldState,curProps) => {
-        const newState = Object.assign({},oldState);
-        switch(event.target.name) {
-          case 'accepts_own_containers':
-            const oldVotes = oldState.properties.accepts_own_containers;
-            const oldUpvotes = oldVotes ? oldVotes.upvotes : 0;
-            const oldDownvotes = oldVotes ? oldVotes.downvotes : 0;
-            newState.properties.accepts_own_containers = {value: event.target.value === 'on', upvotes: oldUpvotes, downvotes: oldDownvotes };
-        }
-        return newState
-      });
+  private handleChange(key: string){
+    return (event: React.FormEvent<HTMLInputElement>) => {
+      if(key in Object.keys(this.state.location)) {
+        this.setState((oldState) => {
+          const newState = Object.assign({},oldState);
+          newState.location[key].value = event.target
+          return newState;
+        })
+      } else {
+        this.setState((oldState,curProps) => {
+          const newState = Object.assign({},oldState);
+          switch(key) {
+            case 'accepts_own_containers':
+              if(newState.location.properties.accepts_own_containers) {
+                newState.location.properties.accepts_own_containers.value = (event.target as InputEventTarget).value === 'on';
+              } else {
+                newState.location.properties.accepts_own_containers = { value: (event.target as InputEventTarget).value === 'on', upvotes: 0, downvotes: 0}
+              }
+              break;
+            case 'location_latitude':
+              newState.location.location.lat = parseFloat((event.target as InputEventTarget).value);
+              break;
+            case 'location_longitude':
+              newState.location.location.lng = parseFloat((event.target as InputEventTarget).value);
+              break;
+          }
+          return newState
+        });
+      }
     }
   }
 
@@ -92,7 +87,7 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
   public render() {
   	const readOnly =
   		<div className="location-data">
-  			<p>{this.state.name}</p>
+  			<p>{this.state.location.name}</p>
         <button className="delete location" onClick={(e) => this.deleteLocation(this.props.location._id)}>
           Delete
         </button>
@@ -103,34 +98,35 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
           View
         </Link>
       </div>
+    const { name, location, properties, description } = this.state.location;
   	const editMode = (
       <form className="edit-location">
         <input
           type="text"
           name="name"
-          value={this.state.name}
+          value={name}
           placeholder="Location name..."
-          onChange={this.handleChange}
+          onChange={this.handleChange("name")}
         />
         <input
           type="text"
           name="latitude"
-          value={this.state.latitude}
+          value={location.lat}
           placeholder="Latitude..."
-          onChange={this.handleChange}
+          onChange={this.handleChange("location_latitude")}
         />
         <input
           type="text"
           name="longitude"
-          value={this.state.longitude}
+          value={location.lng}
           placeholder="Longitude..."
-          onChange={this.handleChange}
+          onChange={this.handleChange("location_longitude")}
         />
         <input
           type="checkbox"
           name="accepts_own_containers"
-          value={(this.state.properties.accepts_own_containers && this.state.properties.accepts_own_containers.value) ? "on" : "off"}
-          onChange={this.handleChange}
+          value={(properties.accepts_own_containers && properties.accepts_own_containers.value) ? "on" : "off"}
+          onChange={this.handleChange("accepts_own_containers")}
         />
         <button className={(this.state.mode === "default" ? "edit" : "save") + " location"} onClick={this.toggleState}>
           Save

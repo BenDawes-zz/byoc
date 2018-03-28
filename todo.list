@@ -1,7 +1,9 @@
+FIX HTML INPUT - Some kind of @types issue?
+
+
 Create design, style all pages
 Come up with a list of properties
 Enter some real data
 Let you search for an address and show the area around
 Let you comment on locations
 Let you vote yes or no on each property, and comment why
-Remove _id from objects in api imports

@@ -32,12 +32,8 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
   render() {
     if(this.props.ready && this.props.location) {
       const location = this.props.location;
-      const { name, latitude, longitude, properties } = {
-        name: location.name,
-        latitude: location.location.lat,
-        longitude: location.location.lng,
-        properties: location.properties,
-      }
+      const { name, properties, description } = location;
+      const { lat, lng } = location.location;
       const propertiesList: React.ReactElement<{}>[] = []
       for(let k in properties) {
         if(properties[k].value) {
@@ -51,6 +47,10 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
       return (
         <div className="location profile">
           <h1>{name}</h1>
+          <h2>Description</h2>
+          <div className="description">
+            {description}
+          </div>
           <ul className="properties list">
             {propertiesList}
           </ul>
