@@ -62,16 +62,16 @@ export default class LocationListEntry extends React.Component<ILocationListEntr
           switch(key) {
             case 'accepts_own_containers':
               if(newState.location.properties.accepts_own_containers) {
-                newState.location.properties.accepts_own_containers.value = (event.target as InputEventTarget).value === 'on';
+                newState.location.properties.accepts_own_containers.value = (event.currentTarget as InputEventTarget).value === 'on';
               } else {
-                newState.location.properties.accepts_own_containers = { value: (event.target as InputEventTarget).value === 'on', upvotes: 0, downvotes: 0}
+                newState.location.properties.accepts_own_containers = { value: (event.currentTarget as InputEventTarget).value === 'on', upvotes: 0, downvotes: 0}
               }
               break;
             case 'location_latitude':
-              newState.location.location.lat = parseFloat((event.target as InputEventTarget).value);
+              newState.location.location.lat = parseFloat((event.currentTarget as InputEventTarget).value);
               break;
             case 'location_longitude':
-              newState.location.location.lng = parseFloat((event.target as InputEventTarget).value);
+              newState.location.location.lng = parseFloat((event.currentTarget as InputEventTarget).value);
               break;
           }
           return newState

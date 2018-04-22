@@ -40,15 +40,10 @@ Meteor.methods({
     }
     Locations.remove({_id});
   },
-  'locations.update'(_id: string, name: string, location: IPoint, properties: ILocationProperties) {
+  'locations.update'(_id: string, newLocation: ILocationBase) {
 
-    check(_id,String);
-    check(name, String);
-    check(location, {
-      lat: Number,
-      lng: Number,
-    });
- 
+    const { name, location, properties, description } = newLocation;
+
     // Make sure the user is logged in before inserting a task
     if (! this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -59,13 +54,13 @@ Meteor.methods({
     const edits = [existingLocation,...existingLocation.edits];
 
     Locations.update(_id, {
-      $set: {name,location,properties,lastEditedAt,lastEditedBy,lastEditedByUsername,edits}
+      $set: {name,location,properties,description,lastEditedAt,lastEditedBy,lastEditedByUsername,edits}
     });
   }
 })
 
 export function updateLocation(_id: string, newLocation: ILocationBase) {
-  Meteor.call('locations.update',_id, newLocation);
+  Meteor.call('locations.update', _id, newLocation);
 }
 
 export function insertLocation(location: ILocationBase) {
