@@ -2,10 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { Coords } from 'google-map-react';
-import { IComment, ICommentBase, ECommentableTypes } from './model';
-import { getNewEditableObject } from './editable';
+import { IComment, ICommentBase, ECommentableTypes, ICommentable } from './model';
 import { getNewUserCreatedObject } from './usercreated';
-
+import { getNewEditableObject } from './editable';
+import { Locations } from './locations';
 
 export const Comments = new Mongo.Collection<IComment>('comments');
 
@@ -30,13 +30,25 @@ Meteor.methods({
     const { lastEditedAt, lastEditedBy, lastEditedByUsername, edits } = getNewEditableObject<IComment>(this.userId);
     const { owner, username, createdAt } = getNewUserCreatedObject(this.userId);
 
-    Comments.insert({
+    const newCommentId = Comments.insert({
       body,
       subject,
       owner, username, createdAt,
       lastEditedAt, lastEditedBy, lastEditedByUsername, edits,
       commentOn, commentOnType,
       comments: [],
+    })
+    let commentOnCollection: Mongo.Collection<ICommentable>;
+    switch(commentOnType) {
+      case ECommentableTypes.location:
+      default:
+        commentOnCollection = Locations;
+    }
+    const currentComments = commentOnCollection.find({_id: commentOn}).fetch()[0].comments;
+    commentOnCollection.update({
+      _id: commentOn
+    }, {
+      $set: { comments: [...currentComments, newCommentId] }
     })
   },
   'comments.delete'(_id) {

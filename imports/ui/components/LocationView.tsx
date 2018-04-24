@@ -1,12 +1,14 @@
 import * as React from 'react';
  
-import { ILocation, ILocationMeteor } from '../../api/model';
+import { ILocation, ILocationMeteor, ECommentableTypes } from '../../api/model';
 import { Locations } from '../../api/locations';
 import { Map, MapMarker } from './Map';
+import { CommentsList } from './CommentsList';
 import { withRouter } from 'react-router-dom';
 import { withTracker } from '../../js-imports/react-meteor-data';
 import { PropTypes } from 'prop-types';
 import { TAPi18n } from '../../js-imports/tap:i18n';
+import { NewComment } from './NewComment';
 
 const translations = (s) => TAPi18n.__(`LocationView.${s}`);
 
@@ -32,7 +34,7 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
   render() {
     if(this.props.ready && this.props.location) {
       const location = this.props.location;
-      const { name, properties, description } = location;
+      const { _id, name, properties, description } = location;
       const { lat, lng } = location.location;
       const propertiesList: React.ReactElement<{}>[] = []
       for(let k in properties) {
@@ -54,6 +56,9 @@ class LocationView extends React.Component<ILocationViewProps,{}> {
           <ul className="properties list">
             {propertiesList}
           </ul>
+          <CommentsList commentsOn={location}/>
+          <NewComment commentOn={_id}
+                      commentOnType={ECommentableTypes.location}/>
         </div>
       );
     }

@@ -31,7 +31,7 @@ Meteor.methods({
     if (! this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-    unsafeInsertLocation(locationBase);
+    unsafeInsertLocation(locationBase,this.userId);
   },
   'locations.delete'(_id) {
     check(_id,String);
@@ -67,10 +67,10 @@ export function insertLocation(location: ILocationBase) {
   Meteor.call('locations.insert', location);
 }
 
-export function unsafeInsertLocation(locationBase: ILocationBase) {
+export function unsafeInsertLocation(locationBase: ILocationBase, userId?: string) {
   const { name, location, properties, description } = locationBase;
-  const { owner, username, createdAt } = getNewUserCreatedObject(this.userId);
-  const { lastEditedAt, lastEditedBy, lastEditedByUsername, edits } = getNewEditableObject<ILocation>(this.userId);
+  const { owner, username, createdAt } = getNewUserCreatedObject(userId);
+  const { lastEditedAt, lastEditedBy, lastEditedByUsername, edits } = getNewEditableObject<ILocation>(userId);
 
   Locations.insert({
     name,
@@ -80,6 +80,7 @@ export function unsafeInsertLocation(locationBase: ILocationBase) {
     owner,
     username,
     createdAt,
+    comments: [],
     reviews: [],
     lastEditedAt,
     lastEditedBy,

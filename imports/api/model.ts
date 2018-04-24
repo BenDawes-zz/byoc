@@ -45,7 +45,7 @@ export interface ILocationProperties {
   unpackaged_items?: ILocationProperty<QuantityGradient>;
   return_own_packaging?: ILocationProperty<QuantityGradient>;
 }
-export interface ILocation extends ILocationBase, IReviewable, IUserCreated, IEditable<ILocation> {
+export interface ILocation extends ILocationBase, IReviewable, ICommentable, IUserCreated, IEditable<ILocation> {
 }
 
 export interface ILocationMeteor extends ILocation, IMeteorEntity {
@@ -72,6 +72,7 @@ export interface ICommentBase {
 export enum ECommentableTypes {
   comments = "comments",
   review = "reviews",
+  location = "locations",
 }
 
 export interface IComment extends ICommentBase, IUserCreated, IEditable<IComment>, ICommentable {
